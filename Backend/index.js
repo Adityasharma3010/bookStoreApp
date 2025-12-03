@@ -30,14 +30,23 @@ app.use(express.json());
 // Use exact FRONTEND_URL from env and enable credentials when a specific origin is set
 const FRONTEND_URL = process.env.FRONTEND_URL || null;
 
-const corsOptions = FRONTEND_URL
-  ? { origin: FRONTEND_URL, credentials: true }
-  : { origin: false }; // no origin => restrict
+// Replace current CORS setup with this:
+const corsOptions = {
+  origin: FRONTEND_URL ? FRONTEND_URL : false,
+  credentials: !!FRONTEND_URL, // true when FRONTEND_URL is set
+};
 
 app.use(cors(corsOptions));
-
-// Optionally handle preflight explicitly (cors package usually covers this)
+// ensure preflight responds with the same headers
 app.options("*", cors(corsOptions));
+
+// Optional: ensure header always present for matched origins
+app.use((req, res, next) => {
+  if (FRONTEND_URL && req.headers.origin === FRONTEND_URL) {
+    res.header("Access-Control-Allow-Credentials", "true");
+  }
+  next();
+});
 
 const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
