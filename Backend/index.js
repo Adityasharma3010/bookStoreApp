@@ -27,8 +27,17 @@ mongoose
 const app = express();
 app.use(express.json());
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "*";
-app.use(cors({ origin: FRONTEND_URL }));
+// Use exact FRONTEND_URL from env and enable credentials when a specific origin is set
+const FRONTEND_URL = process.env.FRONTEND_URL || null;
+
+const corsOptions = FRONTEND_URL
+  ? { origin: FRONTEND_URL, credentials: true }
+  : { origin: false }; // no origin => restrict
+
+app.use(cors(corsOptions));
+
+// Optionally handle preflight explicitly (cors package usually covers this)
+app.options("*", cors(corsOptions));
 
 const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
