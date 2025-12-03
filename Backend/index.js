@@ -8,15 +8,14 @@ import userRoute from "./route/user.route.js";
 
 const app = express();
 
-// allow FRONTEND_ORIGIN (set this env var to your Vercel URL) or allow all for testing
-app.use(
-  cors({ origin: process.env.FRONTEND_ORIGIN || true, credentials: true })
-);
+// use FRONTEND_URL env set in Render (or allow all in dev)
+const FRONTEND_URL = process.env.FRONTEND_URL || "*";
+app.use(cors({ origin: FRONTEND_URL }));
 
 app.use(express.json());
 dotenv.config();
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
