@@ -38,3 +38,4 @@ app.listen(PORT, () => {
 // defining routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
+mongodb+srv://Aditya_adi:<db_password>@bookstore.nfvba84.mongodb.net/
