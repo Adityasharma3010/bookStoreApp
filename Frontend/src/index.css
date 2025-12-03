@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @plugin "daisyui"; */
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.slick-arrow {
+  display: none !important;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #000000;
+}
+
+.dark .slick-prev:before,
+.dark .slick-next:before {
+  color: #ffffff;
+}
+
+.slick-dots {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.slick-dots li {
+  min-width: fit-content !important;
+  width: fit-content !important;
+  height: 15px !important;
+  margin: 0 !important;
+}
+
+.slick-dots li button {
+  padding: 0 !important;
+  min-width: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  background: #000000 !important;
+  border-radius: 15px;
+  opacity: 0.25;
+  transition: 0.3s all ease-in-out;
+}
+
+.slick-dots li.slick-active button {
+  width: 30px !important;
+  opacity: 1 !important;
+}
+
+.dark .slick-dots li button {
+  background: #ffffff !important;
+}
+
+.slick-dots li button:before,
+.slick-dots li.slick-active button:before {
+  content: none !important;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
