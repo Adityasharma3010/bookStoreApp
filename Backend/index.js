@@ -6,30 +6,34 @@ import cors from "cors";
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
 
-const app = express();
+dotenv.config();
 
-// use FRONTEND_URL env set in Render (or allow all in dev)
+// Use an env var that Render will set (MONGODB_URI). Keep old names as fallback.
+const MONGO_URI =
+  process.env.MONGODB_URI ||
+  process.env.URI ||
+  "mongodb://localhost:27017/bookstore";
+
+// Connect to MongoDB with basic error handling
+mongoose
+  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    // optional: exit so Render marks the deploy as failed
+    process.exit(1);
+  });
+
+const app = express();
+app.use(express.json());
+
 const FRONTEND_URL = process.env.FRONTEND_URL || "*";
 app.use(cors({ origin: FRONTEND_URL }));
 
-app.use(express.json());
-dotenv.config();
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// connect to mongoDB
-try {
-  mongoose.connect(URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  console.log("Connected to mongoDB");
-} catch (error) {
-  console.log("Error: ", error);
-}
 
 // defining routes
 app.use("/book", bookRoute);

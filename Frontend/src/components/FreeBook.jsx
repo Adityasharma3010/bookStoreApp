@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import axios from "axios";
+import api from "../api/axios";
 import Cards from "./Cards";
 
 const FreeBook = ({ items }) => {
@@ -10,7 +10,7 @@ const FreeBook = ({ items }) => {
   useEffect(() => {
     const getBook = async () => {
       try {
-        const res = await axios.get("http://localhost:4001/book");
+        const res = await api.get("/book");
         setBook(res.data.filter((data) => data.catagory === "Free"));
         console.log(res.data.filter((data) => data.catagory === "Free"));
       } catch (error) {
@@ -51,7 +51,7 @@ const FreeBook = ({ items }) => {
 
   return (
     <>
-      <div className="container px-4 pb-14 mx-auto max-w-screen-2xl md:px-20">
+      <div className="container px-4 mx-auto pb-14 max-w-screen-2xl md:px-20">
         <div>
           <h1 className="pb-2 text-xl font-semibold">Free Offered Courses</h1>
           <p>
