@@ -6,7 +6,7 @@ console.log("API baseURL:", baseURL); // temporary debug (remove after)
 
 const api = axios.create({
   baseURL: baseURL,
-  withCredentials: true, // set true if you use cookies and configure CORS
+  withCredentials: false, // set true if you use cookies and configure CORS
 });
 
 export default api;

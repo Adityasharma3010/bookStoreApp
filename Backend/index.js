@@ -37,8 +37,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// ensure preflight responds with the same headers
-app.options("*", cors(corsOptions));
 
 // Optional: ensure header always present for matched origins
 app.use((req, res, next) => {
