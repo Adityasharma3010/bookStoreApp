@@ -16,11 +16,10 @@ const MONGO_URI =
 
 // Connect to MongoDB with basic error handling
 mongoose
-  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
-    // optional: exit so Render marks the deploy as failed
     process.exit(1);
   });
 
@@ -30,18 +29,35 @@ app.use(express.json());
 // Use exact FRONTEND_URL from env and enable credentials when a specific origin is set
 const FRONTEND_URL = process.env.FRONTEND_URL || null;
 
-// Replace current CORS setup with this:
+// robust CORS: only allow credentials for the exact FRONTEND_URL
 const corsOptions = {
-  origin: FRONTEND_URL ? FRONTEND_URL : false,
-  credentials: !!FRONTEND_URL, // true when FRONTEND_URL is set
+  origin: function (origin, callback) {
+    if (!origin) {
+      // server-side requests or tools (no Origin header) — allow
+      return callback(null, true);
+    }
+    if (FRONTEND_URL) {
+      return origin === FRONTEND_URL
+        ? callback(null, true)
+        : callback(null, false);
+    }
+    // no FRONTEND_URL configured -> allow any origin (use with caution)
+    return callback(null, true);
+  },
+  credentials: !!FRONTEND_URL,
 };
 
 app.use(cors(corsOptions));
 
-// Optional: ensure header always present for matched origins
+// Ensure the credentials header and exact origin are always present when origin matches
 app.use((req, res, next) => {
-  if (FRONTEND_URL && req.headers.origin === FRONTEND_URL) {
-    res.header("Access-Control-Allow-Credentials", "true");
+  const origin = req.headers.origin;
+  if (FRONTEND_URL && origin === FRONTEND_URL) {
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", FRONTEND_URL);
+    res.vary =
+      (res.getHeader("Vary") || "") +
+      (res.getHeader("Vary") ? ", Origin" : "Origin");
   }
   next();
 });
