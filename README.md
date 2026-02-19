@@ -17,7 +17,7 @@ Users can sign up, log in, browse books/courses, and view free offerings. Authen
 
 ## 🚀 Live Demo
 
-Frontend: https://book-store-app-rho-gules.vercel.app 
+Frontend: https://book-store-app-rho-gules.vercel.app    
 Backend API: https://bookstoreapp-qtuc.onrender.com  
 
 ---
